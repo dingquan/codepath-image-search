@@ -49,7 +49,8 @@ public class SearchActivity extends Activity {
 					int position, long id) {
 				Intent i = new Intent(getApplicationContext(), ImageDisplayActivity.class);
 				ImageResult imageResult = imageResults.get(position);
-				i.putExtra("url", imageResult.getFullUrl());
+//				i.putExtra("url", imageResult.getFullUrl());
+				i.putExtra("result", JsonUtil.toJson(imageResult));
 				startActivity(i);
 			}
 			
