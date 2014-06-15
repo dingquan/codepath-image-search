@@ -3,5 +3,7 @@
 
     <string name="app_name">ImageSearch</string>
     <string name="hello_world">Hello world!</string>
+    <string name="search_hint">Enter your search term</string>
+    <string name="button_search">Search</string>
 
 </resources>
