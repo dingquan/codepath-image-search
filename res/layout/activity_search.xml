@@ -26,6 +26,7 @@
         android:layout_alignBaseline="@+id/etQuery"
         android:layout_alignBottom="@+id/etQuery"
         android:layout_toRightOf="@+id/etQuery"
+        android:onClick="searchImage"
         android:text="@string/button_search" />
 
     <GridView
