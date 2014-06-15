@@ -16,7 +16,6 @@ public class ImageDisplayActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_image_display);
 
-//		String url = getIntent().getStringExtra("url");
 		ImageResult imageResult = (ImageResult)JsonUtil.fromJson(getIntent().getStringExtra("result"), ImageResult.class);
 		SmartImageView ivImage = (SmartImageView) findViewById(R.id.ivResult);
 		ivImage.setImageUrl(imageResult.getFullUrl());
