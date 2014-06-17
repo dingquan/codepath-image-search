@@ -83,7 +83,7 @@ public class SearchActivity extends Activity {
       // Deserialize API response and then construct new objects to append to the adapter
     	this.offset = offset;
 
-		Toast.makeText(this, String.valueOf(offset), Toast.LENGTH_SHORT).show();
+//		Toast.makeText(this, String.valueOf(offset), Toast.LENGTH_SHORT).show();
     	searchImage();
     }
     
@@ -138,6 +138,9 @@ public class SearchActivity extends Activity {
 	}
 	
 	private void searchImage(){
+		if (etQuery.getText().toString().isEmpty()){
+			Toast.makeText(getBaseContext(), R.string.no_query_string, Toast.LENGTH_SHORT).show();
+		}
 		
 		RequestParams params = buildRequestParams();
 		
@@ -173,10 +176,12 @@ public class SearchActivity extends Activity {
 	     // Extract name value from result extras
 	     String filterData = data.getExtras().getString("filter");
 	     // Toast the name to display temporarily on screen
-	     Toast.makeText(this, filterData, Toast.LENGTH_SHORT).show();
+//	     Toast.makeText(this, filterData, Toast.LENGTH_SHORT).show();
 	     
 	     filter = (SearchFilter)JsonUtil.fromJson(filterData, SearchFilter.class);
-	     searchImage();
+	     if (!etQuery.getText().toString().isEmpty()){
+	    	 searchImage();
+	     }
 	  }
 	} 
 }

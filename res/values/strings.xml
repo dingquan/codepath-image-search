@@ -18,4 +18,5 @@
     <string name="img_sizes_prompt">Select Image Size</string>
     <string name="img_types_prompt">Select Image Size</string>
     <string name="colors_prompt">Select Image Size</string>
+    <string name="no_query_string">Please enter some search term first</string>
 </resources>
