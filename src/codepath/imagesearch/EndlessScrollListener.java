@@ -39,7 +39,7 @@ public abstract class EndlessScrollListener implements OnScrollListener {
 		// list is invalidated and should be reset back to initial state
 		if (totalItemCount < previousTotalItemCount) {
 			this.currentPage = this.startingPageIndex;
-			this.previousTotalItemCount = 0;
+			this.previousTotalItemCount = totalItemCount;
 			if (totalItemCount == 0) { this.loading = true; } 
 		}
 

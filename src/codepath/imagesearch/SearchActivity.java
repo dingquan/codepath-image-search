@@ -102,7 +102,7 @@ public class SearchActivity extends Activity {
 	
 	public void onClickSearch(View v){
 		//reset the results
-		imageResults.clear();
+		imageAdapter.clear();
 		this.offset = 0;
 		
 		searchImage();
