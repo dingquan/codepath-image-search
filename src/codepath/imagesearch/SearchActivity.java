@@ -40,6 +40,8 @@ public class SearchActivity extends Activity {
 	private AsyncHttpClient client = new AsyncHttpClient();
 	private ImageResultArrayAdapter imageAdapter;
 	private SearchFilter filter;
+	private int offset=0; //page start offset
+	private int resultSz=8; //size of each API result;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -61,8 +63,30 @@ public class SearchActivity extends Activity {
 			}
 			
 		});
+		gvImages.setOnScrollListener(new EndlessScrollListener(){
+
+			@Override
+			public void onLoadMore(int page, int totalItemsCount) {
+                // Triggered only when new data needs to be appended to the list
+                // Add whatever code is needed to append new items to your AdapterView
+				customLoadMoreDataFromApi(page); 
+                // or customLoadMoreDataFromApi(totalItemsCount); 	
+			}
+			
+		});
 	}
 	
+    // Append more data into the adapter
+    private void customLoadMoreDataFromApi(int offset) {
+      // This method probably sends out a network request and appends new data items to your adapter. 
+      // Use the offset value and add it as a parameter to your API request to retrieve paginated data.
+      // Deserialize API response and then construct new objects to append to the adapter
+    	this.offset = offset;
+
+		Toast.makeText(this, String.valueOf(offset), Toast.LENGTH_SHORT).show();
+    	searchImage();
+    }
+    
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -77,17 +101,19 @@ public class SearchActivity extends Activity {
 	}
 	
 	public void onClickSearch(View v){
+		//reset the results
+		imageResults.clear();
+		this.offset = 0;
+		
 		searchImage();
 	}
 	
-	private void searchImage(){
+	private RequestParams buildRequestParams(){
 		String queryText = etQuery.getText().toString();
-//		Toast.makeText(this, queryText, Toast.LENGTH_SHORT).show();
 		
-//		String url = "https://ajax.googleapis.com/ajax/services/search/images?rsz=8&" +  "start=" + 0 + "&v=1.0&q=" + Uri.encode(queryText);
 		RequestParams params = new RequestParams();
-		params.put("rsz", "8");
-		params.put("start", "0");
+		params.put("rsz", String.valueOf(resultSz));
+		params.put("start", String.valueOf(offset*resultSz));
 		params.put("v", "1.0");
 		params.put("q", Uri.encode(queryText));
 		if (filter != null){
@@ -108,9 +134,15 @@ public class SearchActivity extends Activity {
 				params.put("as_sitesearch", site);
 			}
 		}
+		return params;
+	}
+	
+	private void searchImage(){
+		
+		RequestParams params = buildRequestParams();
 		
 		Log.d("SearchActivity", "requestUrl: " + BASE_URL + ", params: " + params.toString());
-
+		
 		client.get(BASE_URL, params, new JsonHttpResponseHandler(){
 			@Override
 			public void onSuccess(JSONObject response) {
@@ -118,7 +150,7 @@ public class SearchActivity extends Activity {
 				JSONArray imageJsonResults = null;
 				try{
 					imageJsonResults = response.getJSONObject("responseData").getJSONArray("results");
-					imageResults.clear();
+//					imageResults.clear();
 					imageAdapter.addAll(ImageResult.fromJsonArray(imageJsonResults));
 					Log.d("SearchActivity", JsonUtil.toJson(imageResults));
 				}
