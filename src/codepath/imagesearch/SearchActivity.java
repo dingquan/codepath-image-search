@@ -8,7 +8,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -101,11 +104,23 @@ public class SearchActivity extends Activity {
 	}
 	
 	public void onClickSearch(View v){
+		
 		//reset the results
 		imageAdapter.clear();
 		this.offset = 0;
 		
+		if (!isNetworkAvailable()){
+			Toast.makeText(this, "looks like you have zero bar", Toast.LENGTH_SHORT).show();
+			return;
+		}
 		searchImage();
+	}
+	
+	private Boolean isNetworkAvailable() {
+	    ConnectivityManager connectivityManager 
+	          = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+	    NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+	    return activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting();
 	}
 	
 	private RequestParams buildRequestParams(){
@@ -139,7 +154,7 @@ public class SearchActivity extends Activity {
 	
 	private void searchImage(){
 		if (etQuery.getText().toString().isEmpty()){
-			Toast.makeText(getBaseContext(), R.string.no_query_string, Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, R.string.no_query_string, Toast.LENGTH_SHORT).show();
 		}
 		
 		RequestParams params = buildRequestParams();
