@@ -4,7 +4,7 @@
     <string name="app_name">ImageSearch</string>
     <string name="hello_world">Hello world!</string>
     <string name="search_hint">Enter your search term</string>
-    <string name="button_search">Search</string>
+    <string name="label_search">Search</string>
     <string name="title_activity_image_display">ImageDisplayActivity</string>
     <string name="action_settings">Settings</string>
     <string name="filter_menu">Filter</string>

@@ -16,6 +16,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -23,6 +24,8 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.SearchView;
+import android.widget.SearchView.OnQueryTextListener;
 import android.widget.Toast;
 import codepath.imagesearch.dto.ImageResult;
 import codepath.imagesearch.dto.JsonUtil;
@@ -36,16 +39,17 @@ public class SearchActivity extends Activity {
 	private static final int REQUEST_CODE = 10;
 	private static final String BASE_URL = "https://ajax.googleapis.com/ajax/services/search/images";
 	
-	private EditText etQuery;
-	private Button btnSearch;
 	private GridView gvImages;
 	private List<ImageResult> imageResults = new ArrayList<ImageResult>();
 	private AsyncHttpClient client = new AsyncHttpClient();
 	private ImageResultArrayAdapter imageAdapter;
 	private SearchFilter filter;
+	private SearchView searchView;
+	
+	private String queryText;
 	private int offset=0; //page start offset
 	private int resultSz=8; //size of each API result;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -93,28 +97,36 @@ public class SearchActivity extends Activity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.filter_menu, menu);
-        return true;
+        
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.search_menu, menu);
+        inflater.inflate(R.menu.filter_menu, menu);
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+        searchView = (SearchView) searchItem.getActionView();
+		searchView.setOnQueryTextListener(new OnQueryTextListener() {
+			@Override
+			public boolean onQueryTextSubmit(String query) {
+				queryText = query;
+				
+				// reset the results
+				imageAdapter.clear();
+				offset = 0;
+				searchImage();
+				return true;
+			}
+
+			@Override
+			public boolean onQueryTextChange(String newText) {
+				return false;
+			}
+		});
+		return super.onCreateOptionsMenu(menu);
     }
     
 	private void setupViews(){
-		etQuery = (EditText)findViewById(R.id.etQuery);
-		btnSearch = (Button)findViewById(R.id.btnSearch);
 		gvImages = (GridView)findViewById(R.id.gvImages);
 	}
 	
-	public void onClickSearch(View v){
-		
-		//reset the results
-		imageAdapter.clear();
-		this.offset = 0;
-		
-		if (!isNetworkAvailable()){
-			Toast.makeText(this, "looks like you have zero bar", Toast.LENGTH_SHORT).show();
-			return;
-		}
-		searchImage();
-	}
 	
 	private Boolean isNetworkAvailable() {
 	    ConnectivityManager connectivityManager 
@@ -123,9 +135,7 @@ public class SearchActivity extends Activity {
 	    return activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting();
 	}
 	
-	private RequestParams buildRequestParams(){
-		String queryText = etQuery.getText().toString();
-		
+	private RequestParams buildRequestParams(){		
 		RequestParams params = new RequestParams();
 		params.put("rsz", String.valueOf(resultSz));
 		params.put("start", String.valueOf(offset*resultSz));
@@ -153,7 +163,12 @@ public class SearchActivity extends Activity {
 	}
 	
 	private void searchImage(){
-		if (etQuery.getText().toString().isEmpty()){
+		if (!isNetworkAvailable()){
+			Toast.makeText(this, "looks like you have zero bar", Toast.LENGTH_SHORT).show();
+			return;
+		}
+
+		if (queryText == null || queryText.isEmpty()){
 			Toast.makeText(this, R.string.no_query_string, Toast.LENGTH_SHORT).show();
 		}
 		
@@ -186,17 +201,16 @@ public class SearchActivity extends Activity {
 	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-	  // REQUEST_CODE is defined above
-	  if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
-	     // Extract name value from result extras
-	     String filterData = data.getExtras().getString("filter");
-	     // Toast the name to display temporarily on screen
-//	     Toast.makeText(this, filterData, Toast.LENGTH_SHORT).show();
-	     
-	     filter = (SearchFilter)JsonUtil.fromJson(filterData, SearchFilter.class);
-	     if (!etQuery.getText().toString().isEmpty()){
-	    	 searchImage();
-	     }
-	  }
-	} 
+		// REQUEST_CODE is defined above
+		if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
+			// Extract name value from result extras
+			String filterData = data.getExtras().getString("filter");
+			// Toast the name to display temporarily on screen
+			// Toast.makeText(this, filterData, Toast.LENGTH_SHORT).show();
+
+			filter = (SearchFilter) JsonUtil.fromJson(filterData,
+					SearchFilter.class);
+			searchImage();
+		}
+	}
 }
