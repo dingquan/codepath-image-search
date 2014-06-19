@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 import codepath.imagesearch.dto.JsonUtil;
 import codepath.imagesearch.dto.SearchFilter;
 
@@ -39,6 +40,28 @@ public class SearchFilterDialog extends DialogFragment {
 		return frag;
 	}
 
+	private void loadFilterSettings() {
+		String filterSettings = prefs.getString("filters", "");
+		if (filterSettings != null && !filterSettings.isEmpty()){
+			filter = (SearchFilter) JsonUtil.fromJson(filterSettings, SearchFilter.class);
+			setSpinnerToValue(spImgSize, filter.getSize());
+			setSpinnerToValue(spImgType, filter.getType());
+			setSpinnerToValue(spImgColor, filter.getColor());
+			etSite.setText(filter.getSite());
+		}
+	}
+	
+	private void setSpinnerToValue(Spinner spinner, String value) {
+		int index = 0;
+		SpinnerAdapter adapter = spinner.getAdapter();
+		for (int i = 0; i < adapter.getCount(); i++) {
+			if (adapter.getItem(i).equals(value)) {
+				index = i;
+			}
+		}
+		spinner.setSelection(index);
+	}
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -47,6 +70,9 @@ public class SearchFilterDialog extends DialogFragment {
 		getDialog().setTitle(title);
 
 		setupViews(view);
+		
+		//load from preference
+		loadFilterSettings();
 		
 		btnSave.setOnClickListener(new Button.OnClickListener(){
 

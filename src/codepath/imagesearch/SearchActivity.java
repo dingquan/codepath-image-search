@@ -208,6 +208,8 @@ public class SearchActivity extends Activity implements SearchFilterDialogListen
 		filter = (SearchFilter) JsonUtil.fromJson(filterJson, SearchFilter.class);
 		// reset the results
 		imageAdapter.clear();
+		this.offset = 0;
+		
 		searchImage();
 		
 	}
