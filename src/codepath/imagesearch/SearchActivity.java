@@ -8,8 +8,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -21,12 +23,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.SearchView;
 import android.widget.SearchView.OnQueryTextListener;
 import android.widget.Toast;
+import codepath.imagesearch.SearchFilterDialog.SearchFilterDialogListener;
 import codepath.imagesearch.dto.ImageResult;
 import codepath.imagesearch.dto.JsonUtil;
 import codepath.imagesearch.dto.SearchFilter;
@@ -35,7 +36,7 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
-public class SearchActivity extends Activity {
+public class SearchActivity extends Activity implements SearchFilterDialogListener {
 	private static final int REQUEST_CODE = 10;
 	private static final String BASE_URL = "https://ajax.googleapis.com/ajax/services/search/images";
 	
@@ -45,6 +46,8 @@ public class SearchActivity extends Activity {
 	private ImageResultArrayAdapter imageAdapter;
 	private SearchFilter filter;
 	private SearchView searchView;
+	
+	private SharedPreferences prefs;
 	
 	private String queryText;
 	private int offset=0; //page start offset
@@ -56,6 +59,9 @@ public class SearchActivity extends Activity {
 		setContentView(R.layout.activity_search);
 		
 		setupViews();
+		
+		prefs = this.getSharedPreferences("com.codepath.tipcalculator", Context.MODE_PRIVATE);
+
 		imageAdapter = new ImageResultArrayAdapter(this, imageResults);
 		gvImages.setAdapter(imageAdapter);
 		gvImages.setOnItemClickListener(new OnItemClickListener(){
@@ -100,7 +106,7 @@ public class SearchActivity extends Activity {
         
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.search_menu, menu);
-        inflater.inflate(R.menu.filter_menu, menu);
+//        inflater.inflate(R.menu.filter_menu, menu);
         MenuItem searchItem = menu.findItem(R.id.action_search);
         searchView = (SearchView) searchItem.getActionView();
 		searchView.setOnQueryTextListener(new OnQueryTextListener() {
@@ -164,7 +170,7 @@ public class SearchActivity extends Activity {
 	
 	private void searchImage(){
 		if (!isNetworkAvailable()){
-			Toast.makeText(this, "looks like you have zero bar", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, "hmm... looks like you have zero bar", Toast.LENGTH_SHORT).show();
 			return;
 		}
 
@@ -183,7 +189,6 @@ public class SearchActivity extends Activity {
 				JSONArray imageJsonResults = null;
 				try{
 					imageJsonResults = response.getJSONObject("responseData").getJSONArray("results");
-//					imageResults.clear();
 					imageAdapter.addAll(ImageResult.fromJsonArray(imageJsonResults));
 					Log.d("SearchActivity", JsonUtil.toJson(imageResults));
 				}
@@ -195,22 +200,22 @@ public class SearchActivity extends Activity {
 	}
 	
 	public void onFilterAction(MenuItem mi){
-		Intent i = new Intent(SearchActivity.this, FilterActivity.class);
-		startActivityForResult(i, REQUEST_CODE);
+		showFilterDialog();
 	}
-	
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		// REQUEST_CODE is defined above
-		if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
-			// Extract name value from result extras
-			String filterData = data.getExtras().getString("filter");
-			// Toast the name to display temporarily on screen
-			// Toast.makeText(this, filterData, Toast.LENGTH_SHORT).show();
 
-			filter = (SearchFilter) JsonUtil.fromJson(filterData,
-					SearchFilter.class);
-			searchImage();
-		}
+	public void showFilterDialog() {
+		FragmentManager fm = getFragmentManager();
+		SearchFilterDialog searchFilterDialog = SearchFilterDialog
+				.newInstance(getString(R.string.filter_title), prefs);
+		searchFilterDialog.show(fm, "fragment_search_filter");
+	}
+
+	@Override
+	public void onFinishDialog(String filterJson) {
+		filter = (SearchFilter) JsonUtil.fromJson(filterJson, SearchFilter.class);
+		// reset the results
+		imageAdapter.clear();
+		searchImage();
+		
 	}
 }
