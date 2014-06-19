@@ -4,7 +4,7 @@
     <item
         android:id="@+id/item1"
         android:icon="@drawable/ic_action_filter"
-        android:onClick="onFilterAction"
+        android:onClick="showFilterDialog"
         android:showAsAction="ifRoom"
         android:menuCategory="system"
         android:title="@+string/filter_text">

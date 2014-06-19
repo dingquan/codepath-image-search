@@ -37,7 +37,6 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
 public class SearchActivity extends Activity implements SearchFilterDialogListener {
-	private static final int REQUEST_CODE = 10;
 	private static final String BASE_URL = "https://ajax.googleapis.com/ajax/services/search/images";
 	
 	private GridView gvImages;
@@ -96,7 +95,6 @@ public class SearchActivity extends Activity implements SearchFilterDialogListen
       // Deserialize API response and then construct new objects to append to the adapter
     	this.offset = offset;
 
-//		Toast.makeText(this, String.valueOf(offset), Toast.LENGTH_SHORT).show();
     	searchImage();
     }
     
@@ -106,7 +104,6 @@ public class SearchActivity extends Activity implements SearchFilterDialogListen
         
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.search_menu, menu);
-//        inflater.inflate(R.menu.filter_menu, menu);
         MenuItem searchItem = menu.findItem(R.id.action_search);
         searchView = (SearchView) searchItem.getActionView();
 		searchView.setOnQueryTextListener(new OnQueryTextListener() {
@@ -199,11 +196,7 @@ public class SearchActivity extends Activity implements SearchFilterDialogListen
 		});
 	}
 	
-	public void onFilterAction(MenuItem mi){
-		showFilterDialog();
-	}
-
-	public void showFilterDialog() {
+	public void showFilterDialog(MenuItem mi){
 		FragmentManager fm = getFragmentManager();
 		SearchFilterDialog searchFilterDialog = SearchFilterDialog
 				.newInstance(getString(R.string.filter_title), prefs);
