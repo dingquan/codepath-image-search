@@ -1,115 +1,111 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_gravity="center"
+     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:layout_gravity="center" >
 
-    <TableLayout
-        android:id="@+id/tableLayout1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true" >
 
-        <TableRow
-            android:id="@+id/tableRow1"
+
+        <TextView
+            android:id="@+id/tvImageSize"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:paddingLeft="10dp"
+            android:text="@string/label_img_size"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
 
-            <TextView
-                android:id="@+id/tvImageSize"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="10dp"
-                android:text="@string/label_img_size"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
+        <Spinner
+            android:id="@+id/spImgSize"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/tvImageSize"
+            android:layout_marginLeft="20dp"
+            android:layout_toRightOf="@+id/tvImageSize"
+            android:entries="@array/image_sizes"
+            android:paddingLeft="5dp"
+            android:paddingRight="10dp"
+            android:prompt="@+string/img_sizes_prompt" />
 
-            <Spinner
-                android:id="@+id/spImgSize"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:entries="@array/image_sizes"
-                android:paddingRight="10dp"
-                android:prompt="@+string/img_sizes_prompt" />
-
-        </TableRow>
-
-        <TableRow
-            android:id="@+id/tableRow2"
+        <TextView
+            android:id="@+id/tvColor"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvImageSize"
+            android:layout_marginTop="5dp"
+            android:paddingLeft="10dp"
+            android:text="@string/label_color_filter"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
 
-            <TextView
-                android:id="@+id/tvColor"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="10dp"
-                android:text="@string/label_color_filter"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
+        <Spinner
+            android:id="@+id/spColor"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/tvColor"
+            android:layout_alignLeft="@id/spImgSize"
+            android:layout_toRightOf="@+id/tvColor"
+            android:paddingLeft="5dp"
+            android:paddingRight="10dp"
+            android:entries="@array/colors"
+            android:prompt="@string/colors_prompt" />
 
-            <Spinner
-                android:id="@+id/spColor"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:entries="@array/colors"
-                android:prompt="@string/colors_prompt" />
-        </TableRow>
-
-        <TableRow
-            android:id="@+id/tableRow3"
+        <TextView
+            android:id="@+id/tvImgType"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvColor"
+            android:layout_marginTop="5dp"
+            android:paddingLeft="10dp"
+            android:text="@string/label_img_type"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
 
-            <TextView
-                android:id="@+id/tvImgType"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="10dp"
-                android:text="@string/label_img_type"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
-
-            <Spinner
-                android:id="@+id/spImgType"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:entries="@array/image_types"
-                android:prompt="@string/img_types_prompt" />
-        </TableRow>
-
-        <TableRow
-            android:id="@+id/tableRow4"
+        <Spinner
+            android:id="@+id/spImgType"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/tvImgType"
+            android:paddingLeft="5dp"
+            android:paddingRight="10dp"
+            android:layout_alignLeft="@id/spImgSize"
+            android:layout_toRightOf="@+id/tvImgType"
+            android:entries="@array/image_types"
+            android:prompt="@string/img_types_prompt" />
+ 
+        <TextView
+            android:id="@+id/tvSiteFilter"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvImgType"
+            android:layout_marginTop="5dp"
+            android:paddingLeft="10dp"
+            android:text="@string/label_site_filter"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
 
-            <TextView
-                android:id="@+id/tvSiteFilter"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="10dp"
-                android:text="@string/label_site_filter"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
+        <EditText
+            android:id="@+id/etSiteFilter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="5dp"
+            android:paddingRight="10dp"
+            android:layout_toRightOf="@+id/tvSiteFilter"
+            android:layout_alignBottom="@+id/tvSiteFilter"
+            android:layout_alignLeft="@+id/spImgSize"
+            android:ems="10"
+            android:hint="@string/hint_site_filter" >
 
-            <EditText
-                android:id="@+id/etSiteFilter"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:hint="@string/hint_site_filter" >
+            <requestFocus />
+        </EditText>
 
-                <requestFocus />
-            </EditText>
-        </TableRow>
-    </TableLayout>
 
-    <Button
-        android:id="@+id/btnSave"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/tableLayout1"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"
-        android:onClick="onSubmit"
-        android:text="@string/label_save" />
+
+        <Button
+            android:id="@+id/btnSave"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvSiteFilter"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:onClick="onSubmit"
+            android:text="@string/label_save" />
+
 
 </RelativeLayout>
