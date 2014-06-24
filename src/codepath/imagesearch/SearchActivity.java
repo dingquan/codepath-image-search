@@ -59,7 +59,7 @@ public class SearchActivity extends Activity implements SearchFilterDialogListen
 		
 		setupViews();
 		
-		prefs = this.getSharedPreferences("com.codepath.tipcalculator", Context.MODE_PRIVATE);
+		prefs = this.getSharedPreferences("com.codepath.imagesearch", Context.MODE_PRIVATE);
 
 		imageAdapter = new ImageResultArrayAdapter(this, imageResults);
 		gvImages.setAdapter(imageAdapter);
